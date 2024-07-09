@@ -100,13 +100,14 @@ class Email {
     }
   }
 
-  async sendMessage(message: string) {
+  async sendMessage(message: string, logo: string) {
     await this.send(
       'message',
       `Message from ${this.fullName}`,
       {
         name: this.fullName,
         phone: this.phone,
+        logo,
       },
       message,
     );

@@ -74,10 +74,11 @@ class Email {
             throw new error_1.default('Error Sending email', 500);
         }
     }
-    async sendMessage(message) {
+    async sendMessage(message, logo) {
         await this.send('message', `Message from ${this.fullName}`, {
             name: this.fullName,
             phone: this.phone,
+            logo,
         }, message);
     }
 }
