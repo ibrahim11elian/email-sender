@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 /* eslint-disable no-undef */
-const promises_1 = __importDefault(require("fs/promises"));
 const path_1 = __importDefault(require("path"));
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const pug_1 = __importDefault(require("pug"));
@@ -47,23 +46,14 @@ class Email {
             },
         });
     }
-    async getBase64Image(filePath) {
-        const imageBuffer = await promises_1.default.readFile(filePath);
-        return imageBuffer.toString('base64');
-    }
     async send(template, subject, variables = {}, message) {
         try {
-            // Read and encode the logo attachment
-            const logoPath = path_1.default.join(process.cwd(), 'src', 'assets', 'logo.svg');
-            const logoBase64 = await this.getBase64Image(logoPath);
-            const logoSrc = `data:image/svg+xml;base64,${logoBase64}`;
             // render HTML based on a Pug template
             const html = pug_1.default.renderFile(path_1.default.join(process.cwd(), 'src', 'views', `${template}.pug`), {
                 ...variables,
                 subject,
                 message,
                 email: this.from,
-                logoSrc,
             });
             // define the email options
             const mailOptions = {

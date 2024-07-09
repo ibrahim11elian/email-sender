@@ -6,6 +6,7 @@ import compression from 'compression';
 import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
+import path from 'path';
 
 dotenv.config();
 
@@ -35,6 +36,11 @@ app.use(compression());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// static
+// how to access the images in the next line
+// http://localhost:3000/assets/logo.svg
+app.use('/assets', express.static(path.join(process.cwd(), 'src', 'assets')));
 
 app.get('/', (req, res) => {
   res.send('<h1>Welcome to the email sender API<h1>');
