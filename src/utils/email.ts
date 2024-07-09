@@ -1,11 +1,13 @@
 /* eslint-disable no-undef */
+import fs from 'fs/promises';
 import path from 'path';
 import nodemailer from 'nodemailer';
 import pug from 'pug';
 import { htmlToText } from 'html-to-text';
-// import AppError from './error.js';
-// import { IUser } from '../models/user/user.js';
-// import logger from './logger.js';
+import dotenv from 'dotenv';
+import AppError from './error';
+
+dotenv.config();
 
 type USER = {
   to: string;
@@ -60,6 +62,11 @@ class Email {
     } as nodemailer.TransportOptions);
   }
 
+  private async getBase64Image(filePath: string): Promise<string> {
+    const imageBuffer = await fs.readFile(filePath);
+    return imageBuffer.toString('base64');
+  }
+
   private async send(
     template: string,
     subject: string,
@@ -67,6 +74,11 @@ class Email {
     message?: string,
   ) {
     try {
+      // Read and encode the logo attachment
+      const logoPath = path.join(process.cwd(), 'src', 'assets', 'logo.svg');
+      const logoBase64 = await this.getBase64Image(logoPath);
+      const logoSrc = `data:image/svg+xml;base64,${logoBase64}`;
+
       // render HTML based on a Pug template
       const html = pug.renderFile(
         path.join(process.cwd(), 'src', 'views', `${template}.pug`),
@@ -74,23 +86,19 @@ class Email {
           ...variables,
           subject,
           message,
+          email: this.from,
+          logoSrc,
         },
       );
 
       // define the email options
       const mailOptions = {
-        from: this.from,
+        from: process.env.VERIFIED_SENDER_EMAIL as string,
         to: this.to,
         subject,
         html,
         text: htmlToText(html),
-        attachments: [
-          {
-            filename: 'logo.svg',
-            path: path.join(process.cwd(), 'src', 'assets', 'logo.svg'),
-            cid: 'logo',
-          },
-        ],
+        replyTo: this.from,
       };
 
       // create transporter
@@ -99,8 +107,8 @@ class Email {
       // send email
       await transporter.sendMail(mailOptions);
     } catch (error) {
-      console.error(`Error sending email to user ${this.to}:`, error);
-      // throw new AppError('Error Sending email', 500);
+      console.log(`Error sending email to user ${this.to}:`, error);
+      throw new AppError('Error Sending email', 500);
     }
   }
 

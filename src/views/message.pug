@@ -39,12 +39,12 @@ html
   body
     .container
       .header
-        img.logo(src="cid:logo", alt="Logo")
+        img.logo(src=logoSrc, alt="Logo")
       .content
-        h1 Hello, New message from #{name}
+        h3 Hello, New message from #{name}
+        p Email: #{email}
         p Phone: #{phone}
-        p The message:
-          p #{message}
+        p The message: #{message}
       .footer
         p &copy; #{new Date().getFullYear()} Ibrahim Ahmed. All rights reserved.
         p If you no longer wish to receive these emails, you can unsubscribe by clicking <a href="your-unsubscribe-link">here</a>.
