@@ -17,7 +17,7 @@ export default class EmailController {
     };
 
     const emailSender = new Email(user);
-    const logo = `${req.protocol}://${req.get("host")}/assets/logo.svg`;
+    const logo = `${req.protocol}://${req.get('host')}/assets/logo.svg`;
     try {
       await emailSender.sendMessage(message, logo);
       return res.status(200).json({ message: 'Email sent successfully' });

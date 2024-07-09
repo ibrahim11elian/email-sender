@@ -5,6 +5,7 @@ import pug from 'pug';
 import { htmlToText } from 'html-to-text';
 import dotenv from 'dotenv';
 import AppError from './error';
+import { log } from 'console';
 
 dotenv.config();
 
@@ -101,6 +102,8 @@ class Email {
   }
 
   async sendMessage(message: string, logo: string) {
+    console.log(logo);
+
     await this.send(
       'message',
       `Message from ${this.fullName}`,

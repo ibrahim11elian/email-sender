@@ -75,6 +75,7 @@ class Email {
         }
     }
     async sendMessage(message, logo) {
+        console.log(logo);
         await this.send('message', `Message from ${this.fullName}`, {
             name: this.fullName,
             phone: this.phone,
