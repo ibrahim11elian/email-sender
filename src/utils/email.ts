@@ -5,7 +5,6 @@ import pug from 'pug';
 import { htmlToText } from 'html-to-text';
 import dotenv from 'dotenv';
 import AppError from './error';
-import { log } from 'console';
 
 dotenv.config();
 
