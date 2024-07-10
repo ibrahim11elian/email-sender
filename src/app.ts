@@ -7,6 +7,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import path from 'path';
+import pug from 'pug';
 
 dotenv.config();
 
@@ -38,12 +39,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // static
-// how to access the images in the next line
-// http://localhost:3000/assets/logo.svg
 app.use('/assets', express.static(path.join(process.cwd(), 'src', 'assets')));
 
 app.get('/', (req, res) => {
-  res.send('<h1>Welcome to the email sender API<h1>');
+  const html = pug.renderFile(
+    path.join(process.cwd(), 'src', 'views', 'homepage.pug'),
+  );
+  res.send(html);
 });
 
 app.use('/api/v1/email', router);

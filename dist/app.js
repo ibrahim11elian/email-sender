@@ -13,6 +13,7 @@ const cors_1 = __importDefault(require("cors"));
 const helmet_1 = __importDefault(require("helmet"));
 const express_rate_limit_1 = __importDefault(require("express-rate-limit"));
 const path_1 = __importDefault(require("path"));
+const pug_1 = __importDefault(require("pug"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 exports.app = app;
@@ -35,11 +36,10 @@ app.use((0, compression_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 // static
-// how to access the images in the next line
-// http://localhost:3000/assets/logo.svg
 app.use('/assets', express_1.default.static(path_1.default.join(process.cwd(), 'src', 'assets')));
 app.get('/', (req, res) => {
-    res.send('<h1>Welcome to the email sender API<h1>');
+    const html = pug_1.default.renderFile(path_1.default.join(process.cwd(), 'src', 'views', 'homepage.pug'));
+    res.send(html);
 });
 app.use('/api/v1/email', email_routes_1.default);
 app.use('*', (req, res) => {
